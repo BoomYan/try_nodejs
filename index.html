@@ -1,0 +1,54 @@
+<style type="text/css">
+c.style {
+	width: 1000px;
+
+}
+</style>
+<canvas id="c"></canvas>
+<p>hello world</p>
+<script src="/socket.io/socket.io.js"></script>
+<script type="text/javascript">
+	
+
+</script>
+
+<script>
+
+
+var canvas = document.getElementById('c');
+var ctx = canvas.getContext('2d');
+
+var mouseIsDrag = false;
+canvas.onmousedown = function(f){
+	console.log("ouch!");
+	mouseIsDrag = true;
+}
+
+canvas.onmousemove = function(f){
+	ctx.fillStyle = "rgb(200,0,0)"; 
+	if(mouseIsDrag){
+		ctx.fillRect(f.pageX, f.pageY, 1, 1);
+		socket.emit('wtf', {'x': f.pageX, 'y': f.pageY});
+	}
+}
+
+var x = 1;
+
+canvas.onmouseup = function(){
+	mouseIsDrag = false;
+}
+
+</script>
+<script>
+  var socket = io.connect('http://localhost');
+  socket.on('news', function (data) {
+    console.log(data);
+    socket.emit('my other event', { my: 'data' });
+  });
+  console.log(socket.id);
+
+  socket.on('wtf', function(data){
+  	ctx.fillStyle = "rgb(0,200,0)"; 
+  	ctx.fillRect(data.x, data.y, 1, 1);
+  })
+</script>
